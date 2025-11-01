@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tracking Link Creator</title>
+</head>
+<body>
+<h1>Create a Tracking Link</h1>
+<form id="createForm">
+  Enter link name: <input type="text" id="linkName" required />
+  <button type="submit">Create</button>
+</form>
+
+<div id="result"></div>
+
+<script>
+document.getElementById('createForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const linkName = document.getElementById('linkName').value.trim();
+  if (!linkName) return alert('Please provide a link name');
+
+  const response = await fetch('/create-link', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: linkName }),
+  });
+
+  const data = await response.json();
+  if (data.link) {
+    document.getElementById('result').innerHTML = `Tracking link created: <a href="${data.link}" target="_blank">${data.link}</a>`;
+  } else {
+    document.getElementById('result').textContent = 'Failed to create link.';
+  }
+});
+</script>
+</body>
+</html>
